@@ -33,9 +33,9 @@ class SymmetricSlabRay:
         """
         # Determina el ángulo crítico según el índice de refracción menor
         if(self.n_clad > self.n_subs):
-            return np.arcsin(self.n_subs / self.n_core)
-        else:
             return np.arcsin(self.n_clad / self.n_core)
+        else:
+            return np.arcsin(self.n_subs / self.n_core)
     
 
     def phi_clad(self, theta):
