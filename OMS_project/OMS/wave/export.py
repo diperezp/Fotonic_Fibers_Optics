@@ -29,7 +29,7 @@ def export_wave_modes(filename, modes, slab):
         m=0
         for modo in modes:
             pol= slab.polarization
-            w=float(modes[modo])
+            w=modo
             beta=np.sqrt((slab.n_core*slab.k0)**2 - (2*w/slab.h)**2)*1e-6
             neff=beta/slab.k0
 
