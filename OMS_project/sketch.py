@@ -1,48 +1,38 @@
-# Importar librerías necesarias
-import numpy as np  # No se utiliza en este script
-from OMS.ray.simetric_slab import SymmetricSlabRay
-from OMS.ray.solver import find_guided_modes_ray
+from OMS.wave.simetric_slab import SimetricSlabWave
+import numpy as np
+import matplotlib.pyplot as plt
 
-#definir parámetros comunes
-n_core = 1.5      # Índice de refracción del núcleo
-n_clad = 1        # Índice de refracción del revestimiento
-n_subs = 1.1      # Índice de refracción del sustrato
-h = 1e-6          # Espesor de la losa en metros
-wavelength = 1e-6 # Longitud de onda en metros
+#Parametros del problema
+n_core = 1.5            #indice de refraccion del nucleo
+n_cladding = 1.1       #indice de refraccion del recubrimiento
+h = 1e-6                #espesor del nucleo
+wavelength = 1e-6    #longitud de onda de la luz
 
+#creamos una instancia de la clase SimetricSlabWave
+wave_TE = SimetricSlabWave(n_core, n_cladding,wavelength,h, polarization="TE")
 
-# Crear una losa simétrica con polarización TE
-slab_TE = SymmetricSlabRay(
-    n_core=n_core,          # Índice de refracción del núcleo
-    n_clad=n_clad,          # Índice de refracción del revestimiento
-    n_subs=n_subs,          # Índice de refracción del sustrato
-    h=h,                    # Espesor de la losa en metros
-    wavelength=wavelength,  # Longitud de onda en metros
-    polarization="TE"       # Polarización transversal eléctrica
-)
+#llamamos al metodo para encontrar los modos guiados
+def modosTM_pares(u):
+    return wave_TE.TM_even(u)
+def modosTM_impares(u):
+    return wave_TE.TM_odd(u)
+def modosTE_pares(u):
+    return wave_TE.TE_even(u)
+def modosTE_impares(u):
+    return wave_TE.TE_odd(u)
 
-# Encontrar los modos guiados para polarización TE
-modes = find_guided_modes_ray(slab_TE)
-print("Modos guiados encontrados para TE:")
-for m, thetas in modes.items():
-    print(f"Modo m={m}:")
-    for theta in thetas:
-        print(f"  θ = {theta*180/np.pi:.10f}°, n_eff = {np.sin(theta)*slab_TE.n_core:.10f}")
+#graficamos la funcion para encontrar los modos pares
+u_values = np.linspace(0, 4, 1000)
+plt.plot(u_values, modosTE_pares(u_values), label="TE pares")
+plt.plot(u_values, modosTE_impares(u_values), label="TE impares")
+plt.plot(u_values, modosTM_pares(u_values), label="TM pares")
+plt.plot(u_values, modosTM_impares(u_values), label="TM impares")
+plt.axhline(0, color='gray', linestyle='--')
+plt.xlabel("u")
+plt.ylabel("TE_even(u)")
+plt.title("Ecuación característica para modos TE pares")
+plt.legend()
+plt.ylim(0, 4)
+plt.grid()
+plt.show()
 
-# Crear una losa simétrica con polarización TM
-slab_TM = SymmetricSlabRay(
-    n_core=n_core,          # Índice de refracción del núcleo
-    n_clad=n_clad,          # Índice de refracción del revestimiento
-    n_subs=n_subs,          # Índice de refracción del sustrato
-    h=h,                    # Espesor de la losa en metros
-    wavelength=wavelength,  # Longitud de onda en metros
-    polarization="TM"       # Polarización transversal magnética
-)
-
-# Encontrar los modos guiados para polarización TM
-modes_TM = find_guided_modes_ray(slab_TM)
-print("\nModos guiados encontrados para TM:")
-for m, thetas in modes_TM.items():
-    print(f"Modo m={m}:")
-    for theta in thetas:
-        print(f"  θ = {theta*180/np.pi:.10f}°, n_eff = {np.sin(theta)*slab_TM.n_core:.10f}")
