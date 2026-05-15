@@ -22,7 +22,8 @@ def export_wave_modes(filename, modes, slab):
         writer.writerow([
             "mode",
             "polarization",
-            "u",
+            "w",
+            "u"
             "neff",
             "beta(1/um)"
         ])

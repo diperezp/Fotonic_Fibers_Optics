@@ -34,6 +34,31 @@ class SimetricSlabWave:
         factor_TM = (self.n_clad**2 / self.n_core**2) if self.polarization == "TM" else 1   
         w = np.sqrt(self.V**2 - u**2)
         return factor_TM * u * np.tan(u) - w
+    
+    def ecuation_characteristic_odd(self, u):
+        """
+        Calcula la ecuación característica para modos TE impares.
+
+        Parámetros:
+        u: Parámetro de modo transversal.
+
+        Retorna:
+        Valor de la ecuación característica para el modo TE impar.
+        """
+        factor_TM = (self.n_clad**2 / self.n_core**2) if self.polarization == "TM" else 1
+        return factor_TM * -u / np.tan(u)
+    def ecuation_characteristic_even(self, u):
+        """
+        Calcula la ecuación característica para modos TE pares.
+
+        Parámetros:
+        u: Parámetro de modo transversal.
+
+        Retorna:
+        Valor de la ecuación característica para el modo TE par.
+        """
+        factor_TM = (self.n_clad**2 / self.n_core**2) if self.polarization == "TM" else 1   
+        return factor_TM * u * np.tan(u)
 
     def odd(self, u):
         """
